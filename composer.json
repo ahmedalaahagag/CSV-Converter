@@ -1,0 +1,10 @@
+{
+  "name":"CSV Convert",
+  "description":"",
+  "homepage":"https://php-download.com/",
+  "type":"project",
+  "require":{
+    "pear/console_commandline":"*",
+    "phpunit/phpunit": "3.7.*"
+  }
+}

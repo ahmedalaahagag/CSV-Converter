@@ -1,0 +1,55 @@
+#!/usr/bin/env php
+<?php
+error_reporting(E_ALL | E_STRICT);
+
+set_include_path(get_include_path() . PATH_SEPARATOR . realpath(dirname(__FILE__) . '/../src'));
+
+require_once 'index.php';
+require_once 'Console/CommandLine.php';
+require_once 'File/CSV/Converter.php';
+require_once 'File/CSV/Converter/Strategy.php';
+require_once 'File/CSV/Converter/Strategy/ToJSON.php';
+require_once 'File/CSV/Converter/Strategy/ToHTML.php';
+require_once 'File/CSV/Converter/CommandLine.php';
+
+$conversion_strategies = array(
+        'File_CSV_Converter_Strategy_ToHTML' => 'to-html',
+        'File_CSV_Converter_Strategy_ToJSON' => 'to-json'
+);
+
+// Configure parser
+$parser = new File_CSV_Converter_CommandLine(array(), $conversion_strategies);
+
+// Parse cli arguments
+try {
+  $strategy_parameters = [];
+
+  $parsed_arguments = $parser->parse();
+
+  if (!$parsed_arguments->command_name)
+  {
+    throw new Exception('A valid command must be supplied');
+  }
+
+  // Build strategy parameters array
+  foreach ($parsed_arguments->command->options as $option_name => $option_value)
+  {
+    if (!empty($option_value))
+    {
+      $strategy_parameters[$option_name] = $option_value;
+    }
+  }
+
+  // Instanciate and configure strategy
+  $strategy_classname = $parser->getStrategyClassByCommand($parsed_arguments->command_name);
+  $strategy_instance = new $strategy_classname($strategy_parameters);
+
+  // Instanciate converter
+  $converter = new File_CSV_Converter($parsed_arguments->options['map'], $strategy_instance);
+  $converter->convert($parsed_arguments->command->args['input_file'], $parsed_arguments->options['output_file']);
+
+} catch (Exception $e) {
+
+  $parser->displayError($e->getMessage());
+
+}

@@ -1,0 +1,64 @@
+Conversions are implemented using the strategy pattern.
+
+The following strategies are available :
+ * CSV -> HTML
+ * CSV -> Json
+
+CLI documentation :
+
+  # Global help
+  $ ./bin/csv-convert -h
+
+Strategy based CSV file converter
+
+Usage:
+  ./bin/csv-convert [options]
+  ./bin/csv-convert [options] <command> [options] [args]
+
+Options:
+  -o FILEPATH, --output=FILEPATH  path to output file (defaults to
+                                  "./converted.out")
+  -m MAP, --map=MAP               CSV columns map
+  -h, --help                      show this help message and exit
+  -v, --version                   show the program version and exit
+
+Commands:
+  to-html    converts a CSV file to an HTML file (provided by
+             File_CSV_Converter_Strategy_ToHTML)
+  to-json    converts a CSV file to a json file (provided by
+             File_CSV_Converter_Strategy_ToJSON)
+
+  # HTML conversion subcommand
+  $ ./bin/csv-convert to-html -h
+
+Converts a CSV file to an HTML file (provided by
+File_CSV_Converter_Strategy_ToHTML)
+
+Usage:
+ -[options] to-html [options] <input_file>
+
+Options:
+  -t DIRECTORY, --templates-dir=DIRECTORY  path to the directory containing
+                                           the templates
+  -h, --help                               show this help message and exit
+
+Arguments:
+  input_file  path to input file
+
+  # json conversion subcommand
+  $ ./bin/csv-convert to-json -h
+
+Converts a CSV file to a json file (provided by
+File_CSV_Converter_Strategy_ToJSON)
+
+Usage:
+  ./bin/csv-convert [options] to-json [options] <input_file>
+
+Options:
+  -o orientation, --orientation=orientation  document orientation
+  -o format, --format=format                 paper format
+  -h, --help                                 show this help message and
+                                             exit
+
+Arguments:
+  input_file  path to input file
